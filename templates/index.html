@@ -3,27 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <title>Guess the League Skin</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss/dist/tailwind.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-white min-h-screen flex flex-col items-center justify-center p-4">
-    <h1 class="text-3xl font-bold mb-4">Guess the League Skin</h1>
+    <h1 class="text-3xl font-bold mb-4">🎯 Guess the League Skin</h1>
 
-    <div class="w-full max-w-md rounded-xl overflow-hidden shadow-lg">
+    <p class="text-lg text-gray-300 mb-2">🔥 Current Streak: {{ streak }}</p>
+
+    <!-- Enlarged Splash Art -->
+    <div class="w-full max-w-3xl rounded-xl overflow-hidden shadow-lg border-4 border-gray-700">
         <img src="{{ url_for('static', filename='splash/' + skin_file) }}" alt="Splash Art" class="w-full object-cover" />
     </div>
 
-    <form method="post" class="mt-4 w-full max-w-md">
-        {% if not correct %}
-        <input type="text" name="guess" placeholder="Enter skin name..." class="w-full p-2 rounded text-black" required />
-        <div class="flex gap-2 mt-2">
-            <button name="guess" class="bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Guess</button>
-            <button name="surrender" class="bg-red-600 hover:bg-red-800 px-4 py-2 rounded">Surrender</button>
-        </div>
+    <form method="post" class="mt-6 w-full max-w-md space-y-4">
+        {% if not correct and not surrendered %}
+            <input type="text" name="guess" placeholder="Enter skin name..." class="w-full p-2 rounded text-black" autofocus />
+
+            <div class="flex gap-4">
+                <button name="guess" class="flex-1 bg-blue-600 hover:bg-blue-800 px-4 py-2 rounded">Guess</button>
+                <button name="surrender" class="flex-1 bg-red-600 hover:bg-red-800 px-4 py-2 rounded">Surrender</button>
+            </div>
         {% endif %}
 
         {% if result %}
-        <div class="mt-4 text-yellow-300">{{ result }}</div>
-        <a href="{{ url_for('next_image') }}" class="inline-block mt-4 bg-green-600 hover:bg-green-800 px-4 py-2 rounded">Next Image</a>
+            <div class="text-lg {{ 'text-green-400' if correct else 'text-yellow-400' }}">{{ result }}</div>
+        {% endif %}
+
+        {% if correct or surrendered %}
+            <a href="{{ url_for('next_image') }}" class="inline-block mt-4 bg-green-600 hover:bg-green-800 px-4 py-2 rounded">
+                Next Image
+            </a>
         {% endif %}
     </form>
 </body>
